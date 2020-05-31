@@ -1,0 +1,34 @@
+print("siemanko anko")
+
+import sys
+
+print("costam")
+print(sys.argv[1])
+
+import bluetooth as BT
+from bluetooth import *
+
+
+print("Starting Discovery")
+devices = discover_devices()
+print(devices)
+print("Discovery Finished")
+
+for device in devices:
+
+    if device == sys.argv[1]:
+        print("Device is discoverable")
+        break
+    else:
+        print("Device was not Finded")
+        if device == devices[len(devices)]:
+            exit()
+
+services = find_service(bdaddr=sys.argv[1])
+print(services)
+if len(services) > 0:
+    for service in services:
+        print(service)
+else:
+    print("services list is empty")
+

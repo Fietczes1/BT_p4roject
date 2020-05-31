@@ -1,0 +1,160 @@
+
+import os #to add Bluetool liblary as visible in sudo mode
+import sys
+sys.path.append("/home/pi/.local/lib/python2.7/site-packages")
+#print(sys.path)
+
+from bluetooth import *
+from bluetool import Bluetooth as BTtool
+import pprint
+#neeed to be installed by "sudo pip install keyboard"
+
+
+#import keyboard #for windows purpose
+import time
+bt_tool_instance = BTtool()
+
+
+
+def connect_device_by_MAC(device_name):
+    print(device_name)
+    # making object for BT managing
+
+
+    # check that this device (only if trying log by MAC number)
+    # Should be first discovery processed, because
+
+    """ Try to use that when some device is connected
+    CONNECTED CONNECTED CONNECTED CONNECTED CONNECTED CONNECTED CONNECTED CONNECTED CONNECTED CONNECTED CONNECTED CONNECTED
+    """
+    # maybe we should
+    # "for" for list of dictionaries
+
+    connected_dev = bt_tool_instance.get_connected_devices()
+
+    if connected_dev != []:
+        for devices in connected_dev:
+            if devices["mac_address"] == device_name:
+                print("Device with MAC address is already connected", devices["mac_address"])
+                return 1
+            else:
+                if devices["mac_address"] == connected_dev[len(connected_dev) - 1 ]['mac_address']:
+                    print("Device is NOT in Connected scope")
+    else:
+        print("Connected List is Empty")
+
+    """
+    PAIRED PAIRED PAIRED PAIRED PAIRED PAIRED PAIRED PAIRED PAIRED PAIRED PAIRED PAIRED PAIRED PAIRED PAIRED PAIRED PAIRED PAIRED 
+
+    IF paired Connect
+    """
+    paired_dev = bt_tool_instance.get_paired_devices()
+
+    information = []
+
+    if paired_dev != []:
+        for devices in paired_dev:
+            if devices["mac_address"] == device_name:
+                print("Finded device is Available", devices["mac_address"])
+                if (bt_tool_instance.connect(devices["mac_address"], information) == False):
+                    if (information[0] != None):
+                        print("Please connect device costam...")
+                        return 0
+                else:
+                    return 1 #work is  DONE
+            else:
+                if devices["mac_address"] == paired_dev[len(paired_dev) - 1]['mac_address']:
+                    print("Device is NOT in Paired scope")
+    else:
+        print("Paired List is Empty")
+
+    """
+    AVAILABLE AVAILABLE AVAILABLE AVAILABLE AVAILABLE AVAILABLE AVAILABLE AVAILABLE AVAILABLE AVAILABLE AVAILABLE AVAILABLE AVAILABLE 
+    """
+    avail_dev = bt_tool_instance.get_available_devices()
+
+    if avail_dev != []:
+        pprint.pprint(avail_dev)
+        for devices in avail_dev:
+            if devices["mac_address"] == device_name:
+                print("Finded device is Available", devices["mac_address"])
+            else:
+                if devices["mac_address"] == avail_dev[len(avail_dev) - 1]['mac_address']:
+                    mainmenu()
+    else:
+        print("Available List is Empty")
+        mainmenu()
+
+    """
+    TO_PAIR TO_PAIR TO_PAIR TO_PAIR TO_PAIR TO_PAIR TO_PAIR TO_PAIR TO_PAIR TO_PAIR TO_PAIR TO_PAIR TO_PAIR TO_PAIR TO_PAIR TO_PAIR TO_PAIR 
+    """
+
+"""
+    to_pair = bt_tool_instance.get_available_devices()
+
+    if to_pair != []:
+        pprint.pprint(to_pair)
+        for devices in to_pair:
+            if devices["mac_address"] == device_name:
+                print("Finded device is To Pair", devices["mac_address"])
+                # TODO
+            else:
+                if devices["mac_address"] == to_pair[len(to_pair) - 1]['mac_address']:
+                    print("Device is NOT in TO_PAIR scope")
+    else:
+        print("To Pair List is Empty")
+"""
+
+def mainmenu():
+    print("Your Device is not visible\n Please make your device visible, or trigger pairing from your device")
+    print('1. Confirm My device visibility')
+    print('2. Chose pairing from Own device')
+    print('3. Finish programme')
+
+    while(True):
+        a = raw_input()
+        print(a)
+        if a == '1':
+            print("Make your device visible. Push \"Enter\" when finish ")
+            raw_input()
+            bt_tool_instance.start_scanning(2000)
+            print("Check that your device, occur on list below")
+            print(bt_tool_instance.get_available_devices())
+            #use wait for scanning in background is Done
+            time.sleep(15)#This function count time in seconds
+            print("BT devices refreshed\n Now try to connect device by option 2.")
+
+
+        elif a == '2':
+            print("Option 2 is selected")
+            connect_device_by_MAC('2C:FD:A1:95:5E:8A')
+            #pairing programme procedure
+
+        elif a == '3':
+            exit(0)
+
+        else:
+            print("None\n")
+            exit(0)
+
+        time.sleep(0.3)
+
+
+
+def pair_device_with_auto_confirm():
+    print("TODO is function to confirmation")
+
+def discoverrabling_for_external_pairing():
+    print("Function is TODO")
+
+
+
+
+print("device will be connected")
+mainmenu()
+
+# import sys
+# '2C:FD:A1:95:5E:8A'
+
+# We need to find address as MAC even when we looking by name
+
